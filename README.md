@@ -1,1 +1,1 @@
-# python_pfqa
+# Repository for Python for QA training
