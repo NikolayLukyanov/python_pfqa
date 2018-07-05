@@ -31,3 +31,13 @@ class GroupHelper:
         wd = self.app.wd
         wd.find_element_by_link_text("groups").click()
 
+    def delete_first(self):
+        wd = self.app.wd
+        self.open_group_page()
+        # select first group
+        # need to add check if first group exist. will be done in future
+        wd.find_element_by_name("selected[]").click()
+        # submit group deletion
+        wd.find_element_by_name("delete").click()
+        self.return_to_group_page()
+

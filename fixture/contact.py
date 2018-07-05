@@ -1,5 +1,4 @@
 
-
 class ContactHelper:
     def __init__(self, app):
         self.app = app
@@ -92,3 +91,12 @@ class ContactHelper:
     def open_new_contact_page(self):
         wd = self.app.wd
         wd.find_element_by_link_text("add new").click()
+
+    def delete_first(self):
+        wd = self.app.wd
+        self.app.open_home_page()
+        # need to add check if first contact exist. will be done in future
+        wd.find_element_by_name("selected[]").click()
+        wd.find_element_by_xpath("//div[@id='content']/form[2]/div[2]/input").click()
+        wd.switch_to_alert().accept()
+        self.app.open_home_page()
