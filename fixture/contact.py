@@ -6,6 +6,13 @@ class ContactHelper:
     def create(self, contact):
         wd = self.app.wd
         self.open_new_contact_page()
+        self.fill_add_contact_form(contact)
+        self.app.open_home_page()
+        # submitting form
+        wd.find_element_by_xpath("//div[@id='content']/form/input[21]").click()
+
+    def fill_add_contact_form(self, contact):
+        wd = self.app.wd
         wd.find_element_by_name("firstname").click()
         wd.find_element_by_name("firstname").clear()
         wd.find_element_by_name("firstname").send_keys(contact.firstname)
@@ -84,9 +91,7 @@ class ContactHelper:
         wd.find_element_by_name("notes").click()
         wd.find_element_by_name("notes").clear()
         wd.find_element_by_name("notes").send_keys(contact.notes)
-        # submitting form
-        wd.find_element_by_xpath("//div[@id='content']/form/input[21]").click()
-        self.app.open_home_page()
+
 
     def open_new_contact_page(self):
         wd = self.app.wd
@@ -107,7 +112,14 @@ class ContactHelper:
         wd = self.app.wd
         self.app.open_home_page()
         # need to add check if first contact exist. will be done in future
-        wd.find_element_by_xpath("//table[@id='maintable']/tbody/tr[2]/td[8]/a/img").click()
+        self.select_first()
+        self.fill_edit_contact_form(contact)
+        # submitting form
+        wd.find_element_by_name("update").click()
+        self.app.open_home_page()
+
+    def fill_edit_contact_form(self, contact):
+        wd = self.app.wd
         wd.find_element_by_name("firstname").click()
         wd.find_element_by_name("firstname").clear()
         wd.find_element_by_name("firstname").send_keys(contact.firstname)
@@ -182,6 +194,7 @@ class ContactHelper:
         wd.find_element_by_name("notes").click()
         wd.find_element_by_name("notes").clear()
         wd.find_element_by_name("notes").send_keys(contact.notes)
-        # submitting form
-        wd.find_element_by_name("update").click()
-        self.app.open_home_page()
+
+    def select_first(self):
+        wd = self.app.wd
+        wd.find_element_by_xpath("//table[@id='maintable']/tbody/tr[2]/td[8]/a/img").click()
