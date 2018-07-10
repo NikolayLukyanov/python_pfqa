@@ -12,7 +12,6 @@ class ContactHelper:
         self.app.open_home_page()
 
     def fill_add_contact_form(self, contact):
-        wd = self.app.wd
         self.change_field_value_by_name("firstname", contact.firstname)
         self.change_field_value_by_name("middlename", contact.middlename)
         self.change_field_value_by_name("lastname", contact.lastname)
@@ -48,21 +47,30 @@ class ContactHelper:
         wd.find_element_by_link_text("add new").click()
 
     def delete_first(self):
-        wd = self.app.wd
         self.app.open_home_page()
-        # need to add check if first contact exist. will be done in future
-        wd.find_element_by_name("selected[]").click()
-        wd.find_element_by_xpath("//div[@id='content']/form[2]/div[2]/input").click()
-        wd.switch_to_alert().accept()
+        self.select_first()
+        self.submit_contact_deletion()
         self.app.open_home_page()
 
+    def delete_all(self):
+        wd = self.app.wd
+        self.app.open_home_page()
+        #click on select all contacts
+        wd.find_element_by_xpath("//div/div[4]/form[2]/input[2]").click()
+        self.submit_contact_deletion()
+        self.app.open_home_page()
+
+    def submit_contact_deletion(self):
+        wd = self.app.wd
+        wd.find_element_by_xpath("//div[@id='content']/form[2]/div[2]/input").click()
+        wd.switch_to_alert().accept()
 
     # method to edit first contact. group editing not included in this method
     def edit_first(self, new_contact_data):
         wd = self.app.wd
         self.app.open_home_page()
-        # need to add check if first contact exist. will be done in future
-        self.select_first()
+        #click on first contact edit icon
+        wd.find_element_by_xpath("//table[@id='maintable']/tbody/tr[2]/td[8]/a/img").click()
         self.fill_edit_contact_form(new_contact_data)
         # submitting form
         wd.find_element_by_name("update").click()
@@ -112,4 +120,9 @@ class ContactHelper:
 
     def select_first(self):
         wd = self.app.wd
-        wd.find_element_by_xpath("//table[@id='maintable']/tbody/tr[2]/td[8]/a/img").click()
+        wd.find_element_by_name("selected[]").click()
+
+    def count(self):
+        wd = self.app.wd
+        self.app.open_home_page()
+        return len(wd.find_elements_by_name("selected[]"))
