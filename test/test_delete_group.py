@@ -5,8 +5,8 @@ def test_delete_first_group(app):
         app.group.create(Group(group_name="zaglushka"))
     oldgroups = app.group.getgrouplist()
     app.group.delete_first()
-    newgroups = app.group.getgrouplist()
-    assert len(oldgroups) - 1 == len(newgroups)
+    assert len(oldgroups) - 1 == app.group.count()
         #check, that list of oldgroup without first element is equal to the list of group after deletion first group
+    newgroups = app.group.getgrouplist()
     oldgroups.pop(0)
     assert oldgroups == newgroups

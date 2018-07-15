@@ -11,6 +11,7 @@ class ContactHelper:
         # submitting form
         wd.find_element_by_xpath("//div[@id='content']/form/input[21]").click()
         self.app.open_home_page()
+        self.contact_cache = None
 
     def fill_add_contact_form(self, contact):
         self.change_field_value_by_name("firstname", contact.firstname)
@@ -54,6 +55,7 @@ class ContactHelper:
         self.select_first()
         self.submit_contact_deletion()
         self.app.open_home_page()
+        self.contact_cache = None
 
     def delete_all(self):
         wd = self.app.wd
@@ -62,6 +64,7 @@ class ContactHelper:
         wd.find_element_by_xpath("//div/div[4]/form[2]/input[2]").click()
         self.submit_contact_deletion()
         self.app.open_home_page()
+        self.contact_cache = None
 
     def submit_contact_deletion(self):
         wd = self.app.wd
@@ -78,6 +81,7 @@ class ContactHelper:
         # submitting form
         wd.find_element_by_name("update").click()
         self.app.open_home_page()
+        self.contact_cache = None
 
     def fill_edit_contact_form(self, contact):
         self.change_field_value_by_name("firstname", contact.firstname)
@@ -130,15 +134,17 @@ class ContactHelper:
         self.app.open_home_page()
         return len(wd.find_elements_by_name("selected[]"))
 
-    def getcontactlist(self):
-        wd = self.app.wd
-        self.app.open_home_page()
-        contactlist = []
-        for element in wd.find_elements_by_name("entry"):
+    contact_cache = None
 
-            fullname = str(element.find_element_by_name("selected[]").get_attribute("title")).split()[1:]
-            firstname = fullname[0][1:]
-            lastname = fullname[1][:-1]
-            id = element.find_element_by_name("selected[]").get_attribute("value")
-            contactlist.append(Contact(firstname=firstname, lastname=lastname, id=id))
-        return contactlist
+    def getcontactlist(self):
+        if self.contact_cache == None:
+            wd = self.app.wd
+            self.app.open_home_page()
+            self.contact_cache = []
+            for element in wd.find_elements_by_name("entry"):
+                fullname = str(element.find_element_by_name("selected[]").get_attribute("title")).split()[1:]
+                firstname = fullname[0][1:]
+                lastname = fullname[1][:-1]
+                id = element.find_element_by_name("selected[]").get_attribute("value")
+                self.contact_cache.append(Contact(firstname=firstname, lastname=lastname, id=id))
+        return list(self.contact_cache)

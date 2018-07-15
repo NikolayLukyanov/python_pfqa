@@ -13,10 +13,10 @@ def test_edit_first_contact(app):
                                phone2="edited phone 2", notes="edited notes")
     contact.id = oldcontacts[0].id
     app.contact.edit_first(contact)
-    newcontacts = app.contact.getcontactlist()
         # check, that after editing contact count of contactss not changed
-    assert len(oldcontacts) == len(newcontacts)
+    assert len(oldcontacts) == app.contact.count()
         # check, that list of contacts after editing contact is the same, as list of contacts before editing with first contact replaced
+    newcontacts = app.contact.getcontactlist()
     oldcontacts[0] = contact
     assert sorted(oldcontacts, key=Contact.id_or_max) == sorted(newcontacts, key=Contact.id_or_max)
 
@@ -27,9 +27,9 @@ def test_edit_first_contact_person(app):
     contact = Contact(firstname="LEnin", middlename="Takoy", lastname="Molodoy", nickname="Yuniy Oktyabr Vperedi")
     contact.id = oldcontacts[0].id
     app.contact.edit_first(contact)
+        # check, that after editing contact count of contactss not changed
+    assert len(oldcontacts) == app.contact.count()
+        # check, that list of contacts after editing contact is the same, as list of contacts before editing with first contact replaced
     newcontacts = app.contact.getcontactlist()
-    # check, that after editing contact count of contactss not changed
-    assert len(oldcontacts) == len(newcontacts)
-    # check, that list of contacts after editing contact is the same, as list of contacts before editing with first contact replaced
     oldcontacts[0] = contact
     assert sorted(oldcontacts, key=Contact.id_or_max) == sorted(newcontacts, key=Contact.id_or_max)
