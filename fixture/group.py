@@ -1,4 +1,5 @@
 from model.group import Group
+import sys
 
 class GroupHelper:
     def __init__(self, app):
@@ -41,21 +42,24 @@ class GroupHelper:
             return
         wd.find_element_by_link_text("groups").click()
 
-    def delete_first(self):
+    def delete_first(self, index):
+        self.delete_by_index(0)
+
+    def delete_by_index(self, index):
         wd = self.app.wd
         self.open_group_page()
-        # select first group
-        self.select_first_group()
+        # select group by index , need to add check if index is more than number of groups
+        self.select_group_by_index(index)
         # submit group deletion
         wd.find_element_by_name("delete").click()
         self.return_to_group_page()
         self.group_cache = None
 
 
-    def edit_first(self, new_group_data):
+    def edit_group_by_index(self, new_group_data, index):
         wd = self.app.wd
         self.open_group_page()
-        self.select_first_group()
+        self.select_group_by_index(index)
         # submit group deletion
         wd.find_element_by_name("edit").click()
         # fill group data
@@ -65,10 +69,19 @@ class GroupHelper:
         self.return_to_group_page()
         self.group_cache = None
 
-    def select_first_group(self):
+    def edit_first(self, new_group_data):
+        self.edit_group_by_index(new_group_data, 0)
+
+    def select_group_by_index(self, index):
         wd = self.app.wd
-        # need to add check if first group exist. will be done in future
-        wd.find_element_by_name("selected[]").click()
+        groupcount = len(self.getgrouplist())
+        if groupcount <= index:
+            sys.exit("Index value is %d bigger than number of groups %d" % (index, groupcount))
+
+        wd.find_elements_by_name("selected[]")[index].click()
+
+    def select_first_group(self):
+        self.select_group_by_index(0)
 
     def count(self):
         wd = self.app.wd

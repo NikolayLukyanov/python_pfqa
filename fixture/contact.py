@@ -1,4 +1,5 @@
 from model.contact import Contact
+import sys
 
 class ContactHelper:
     def __init__(self, app):
@@ -51,8 +52,11 @@ class ContactHelper:
         wd.find_element_by_link_text("add new").click()
 
     def delete_first(self):
+        self.delete_by_index(0)
+
+    def delete_by_index(self, index):
         self.app.open_home_page()
-        self.select_first()
+        self.select_by_index(index)
         self.submit_contact_deletion()
         self.app.open_home_page()
         self.contact_cache = None
@@ -73,10 +77,14 @@ class ContactHelper:
 
     # method to edit first contact. group editing not included in this method
     def edit_first(self, new_contact_data):
+        self.edit_by_index(new_contact_data, 0)
+
+    def edit_by_index(self, new_contact_data, index):
         wd = self.app.wd
         self.app.open_home_page()
+        offset = index + 2
         #click on first contact edit icon
-        wd.find_element_by_xpath("//table[@id='maintable']/tbody/tr[2]/td[8]/a/img").click()
+        wd.find_element_by_xpath("//table[@id='maintable']/tbody/tr[%d]/td[8]/a/img" % offset).click()
         self.fill_edit_contact_form(new_contact_data)
         # submitting form
         wd.find_element_by_name("update").click()
@@ -126,8 +134,14 @@ class ContactHelper:
                 wd.find_element_by_xpath(xpath % text).click()
 
     def select_first(self):
+        self.select_by_index(0)
+
+    def select_by_index(self, index):
         wd = self.app.wd
-        wd.find_element_by_name("selected[]").click()
+        contactcount = len(self.getcontactlist())
+        if contactcount <= index:
+            sys.exit("Index value is %d bigger than number of contacts %d" % (index, contactcount))
+        wd.find_elements_by_name("selected[]")[index].click()
 
     def count(self):
         wd = self.app.wd
