@@ -174,8 +174,10 @@ class ContactHelper:
                 firstname = person[2].text
                 lastname = person[1].text
                 allphones = person[5].text
+                allemails = person[4].text
+                address = person[3].text
                 id = element.find_element_by_name("selected[]").get_attribute("value")
-                self.contact_cache.append(Contact(firstname=firstname, lastname=lastname, id=id, all_phones_from_homepage=allphones))
+                self.contact_cache.append(Contact(firstname=firstname, lastname=lastname, id=id, all_phones_from_homepage=allphones, all_emails_from_homepage=allemails, address=address))
         return list(self.contact_cache)
 
     def get_contact_info_from_edit_page(self, index):
@@ -188,8 +190,13 @@ class ContactHelper:
         mobile_phone = wd.find_element_by_name("mobile").get_attribute("value")
         work_phone = wd.find_element_by_name("work").get_attribute("value")
         phone2 = wd.find_element_by_name("phone2").get_attribute("value")
+        email = wd.find_element_by_name("email").get_attribute("value")
+        email2 = wd.find_element_by_name("email2").get_attribute("value")
+        email3 = wd.find_element_by_name("email3").get_attribute("value")
+        address = wd.find_element_by_name("address").get_attribute("value")
+
         return Contact(firstname=firstname, lastname=lastname, id=id, home_phone=home_phone, mobile_phone=mobile_phone,
-                       work_phone=work_phone, phone2=phone2)
+                       work_phone=work_phone, phone2=phone2, main_email=email, email_2=email2, email_3=email3, address=address)
 
     def get_contact_info_from_view_page(self, index):
         wd = self.app.wd
@@ -201,3 +208,18 @@ class ContactHelper:
         phone2 = re.search("P: (.*)", text).group(1)
         return Contact(home_phone=home_phone, mobile_phone=mobile_phone,
                        work_phone=work_phone, phone2=phone2)
+
+    def clear(self, s):
+        return re.sub("[() -]", "", s)
+
+    def merge_phones_like_on_home_page(self, contact):
+        return "\n".join(filter(lambda x: x != "",
+                                map(lambda x: self.clear(x),
+                                    filter(lambda x: x is not None,
+                                           [contact.home_phone, contact.mobile_phone, contact.work_phone,
+                                            contact.phone2]))))
+
+    def merge_emails_like_on_home_page(self, contact):
+        return "\n".join(filter(lambda x: x != "",
+                                filter(lambda x: x is not None,
+                                      [contact.main_email, contact.email_2, contact.email_3])))
