@@ -43,3 +43,7 @@ class SessionHelper:
             else:
                 self.logout()
         self.login(username, password)
+
+    def close_browser(self):
+        wd = self.app.wd
+        wd.close()
