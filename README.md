@@ -1,1 +1,1 @@
-# Repository for Python for QA training
+# Academic project - test framework for Address Book web application
