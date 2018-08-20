@@ -11,7 +11,7 @@ try:
 except getopt.GetoptError as err:
     getopt.usage()
     sys.exit(2)
-n = 1
+n = 4
 f = "/data/groups.json"
 
 safechars = string.ascii_letters + string.digits + "~ -_." + "/"

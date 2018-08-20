@@ -46,10 +46,16 @@ def stop(request):
     request.addfinalizer(fin)
     return fixture
 
+@pytest.fixture(scope="session", autouse=True )
+def check_ui(request):
+    return request.config.getoption("--check_ui")
+
+
 def pytest_addoption(parser):
     parser.addoption("--browser", action="store", default="firefox")
     parser.addoption("--baseUrl", action="store", default="http://localhost/addressbook/")
     parser.addoption("--target", action="store", default="target.json")
+    parser.addoption("--check_ui", action="store_true", default="target.json")
 
 def pytest_generate_tests(metafunc):
     for fixture in metafunc.fixturenames:
