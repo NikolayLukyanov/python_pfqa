@@ -3,8 +3,8 @@
 from model.group import Group
 
 
-def test_add_group(app, data_groups):
-    group = data_groups
+def test_add_group(app, json_groups):
+    group = json_groups
     oldgroups = app.group.getgrouplist()
     app.group.create(group)
     # check, that after adding group count of groups increased by 1, comparing to state before adding group
