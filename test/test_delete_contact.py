@@ -6,12 +6,12 @@ from random import randrange
 def test_delete_random(app):
     if app.contact.count() == 0:
         app.contact.create(Contact(firstname="Nikto"))
-    oldcontacts = app.contact.getcontactlist()
+    oldcontacts = app.contact.get_contact_list()
     index = randrange(len(oldcontacts))
     app.contact.delete_by_index(index)
        # check, that after deleting contact, count of contacts decreased by 1, comparing to state before deleting contact
     assert len(oldcontacts) - 1 == app.contact.count()
-    newcontacts = app.contact.getcontactlist()
+    newcontacts = app.contact.get_contact_list()
     oldcontacts.pop(index)
     assert oldcontacts == newcontacts
 

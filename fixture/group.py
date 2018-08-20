@@ -55,6 +55,15 @@ class GroupHelper:
         self.return_to_group_page()
         self.group_cache = None
 
+    def delete_by_id(self, id):
+        wd = self.app.wd
+        self.open_group_page()
+        # select group by index , need to add check if index is more than number of groups
+        self.select_group_by_id(id)
+        # submit group deletion
+        wd.find_element_by_name("delete").click()
+        self.return_to_group_page()
+        self.group_cache = None
 
     def edit_group_by_index(self, new_group_data, index):
         wd = self.app.wd
@@ -74,11 +83,15 @@ class GroupHelper:
 
     def select_group_by_index(self, index):
         wd = self.app.wd
-        groupcount = len(self.getgrouplist())
+        groupcount = len(self.get_group_list())
         if groupcount <= index:
             sys.exit("Index value is %d bigger than number of groups %d" % (index, groupcount))
 
         wd.find_elements_by_name("selected[]")[index].click()
+
+    def select_group_by_id(self, id):
+        wd = self.app.wd
+        wd.find_element_by_css_selector("input[value='%s']" % id).click()
 
     def select_first_group(self):
         self.select_group_by_index(0)
@@ -90,7 +103,7 @@ class GroupHelper:
 
     group_cache = None
 
-    def getgrouplist(self):
+    def get_group_list(self):
         if  self.group_cache == None:
             wd = self.app.wd
             self.open_group_page()

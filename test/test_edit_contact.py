@@ -6,7 +6,7 @@ from random import randrange
 def test_edit_random_contact(app):
     if app.contact.count() == 0:
         app.contact.create(Contact(firstname="Nikto"))
-    oldcontacts = app.contact.getcontactlist()
+    oldcontacts = app.contact.get_contact_list()
     index = randrange(len(oldcontacts))
     contact = Contact(firstname="Edit", middlename="Editovich", lastname="Editov", nickname="EditedNick", title="edited title", company="edited company", address="edited address",
                                home_phone="edited home phone", mobile_phone="edited mobile phone", work_phone="edited work phone", fax="edited fax", main_email="edited main email", email_2="edited email 2",
@@ -17,7 +17,7 @@ def test_edit_random_contact(app):
         # check, that after editing contact count of contactss not changed
     assert len(oldcontacts) == app.contact.count()
         # check, that list of contacts after editing contact is the same, as list of contacts before editing with first contact replaced
-    newcontacts = app.contact.getcontactlist()
+    newcontacts = app.contact.get_contact_list()
     oldcontacts[index] = contact
     assert sorted(oldcontacts, key=Contact.id_or_max) == sorted(newcontacts, key=Contact.id_or_max)
 

@@ -152,7 +152,7 @@ class ContactHelper:
 
     def select_by_index(self, index):
         wd = self.app.wd
-        contactcount = len(self.getcontactlist())
+        contactcount = len(self.get_contact_list())
         if contactcount <= index:
             sys.exit("Index value is %d bigger than number of contacts %d" % (index, contactcount))
         wd.find_elements_by_name("selected[]")[index].click()
@@ -164,7 +164,7 @@ class ContactHelper:
 
     contact_cache = None
 
-    def getcontactlist(self):
+    def get_contact_list(self):
         if self.contact_cache == None:
             wd = self.app.wd
             self.app.open_home_page()
