@@ -5,13 +5,13 @@ import os.path
 import jsonpickle
 import getopt
 import sys
-
+from fixture.orm import ORMFixture
 try:
     opts, args = getopt.getopt(sys.argv[1:], "n:f:", ["number of contacts", "file"])
 except getopt.GetoptError as err:
     getopt.usage()
     sys.exit(2)
-n = 5
+n = 2
 f = "/data/contacts.json"
 
 safechars = string.ascii_letters + string.digits + "~ -_." + "/"
@@ -32,6 +32,11 @@ def random_string(prefix, maxlength):
     symbols = string.ascii_letters + string.digits + string.punctuation + " "*10
     return prefix + "".join([random.choice(symbols) for i in range(random.randrange(maxlength))])
 
+db = ORMFixture(host='127.0.0.1', name='addressbook', user='root', password='')
+try:
+    groups_number=len(db.get_group_list())
+finally:
+    pass
 
 testdata = [Contact(firstname="", middlename="", lastname="", nickname="", title="", company="", address="",
                                home_phone="", mobile_phone="", work_phone="", fax="", main_email="", email_2="",
@@ -48,7 +53,7 @@ testdata = [Contact(firstname="", middlename="", lastname="", nickname="", title
                                 birth_month=str(random.randint(1,12)), birth_year=str(str(random.randint(0,9999))),
                                 ann_day=str(random.randint(1,31)), ann_month=str(random.randint(1,12)),
                                 ann_year=str(str(random.randint(0,9999))), address2=random_string("address2", 5),
-                                phone2=random_string("phone2", 5), notes=random_string("notes", 5)) for i in range(n)]
+                                phone2=random_string("phone2", 5), group_number=random.randrange(groups_number), notes=random_string("notes", 5)) for i in range(n)]
 
 file = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..%s" %f)
 with open(file, "w") as fi:

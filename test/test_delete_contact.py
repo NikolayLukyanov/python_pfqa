@@ -1,23 +1,28 @@
 # -*- coding: utf-8 -*-
 
 from model.contact import Contact
-from random import randrange
+import random
 
-def test_delete_random(app):
-    if app.contact.count() == 0:
+
+def test_delete_random(app, db, check_ui):
+    if len(db.get_contact_list()) == 0:
         app.contact.create(Contact(firstname="Nikto"))
-    oldcontacts = app.contact.get_contact_list()
-    index = randrange(len(oldcontacts))
-    app.contact.delete_by_index(index)
-       # check, that after deleting contact, count of contacts decreased by 1, comparing to state before deleting contact
-    assert len(oldcontacts) - 1 == app.contact.count()
-    newcontacts = app.contact.get_contact_list()
-    oldcontacts.pop(index)
+    oldcontacts = db.get_contact_list()
+    contact = random.choice(oldcontacts)
+    app.contact.delete_by_id(contact.id)
+    newcontacts = db.get_contact_list()
+    oldcontacts.remove(contact)
     assert oldcontacts == newcontacts
+    if check_ui:
+        assert sorted(db.get_stripped_contact_list(), key=Contact.id_or_max) == \
+               sorted(app.contact.get_contact_list(), key=Contact.id_or_max)
 
-def test_delete_all_contacts(app):
-    number_of_contacts = app.contact.count()
+def test_delete_all_contacts(app, db, check_ui):
+    number_of_contacts = len(db.get_contact_list())
     if number_of_contacts == 0:
         app.contact.create(Contact(firstname="Nikto"))
     app.contact.delete_all()
-    assert app.contact.count() == 0
+    assert len(db.get_contact_list()) == 0
+    if check_ui:
+        assert sorted(db.get_stripped_contact_list(), key=Contact.id_or_max) == \
+               sorted(app.contact.get_contact_list(), key=Contact.id_or_max)

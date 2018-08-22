@@ -3,10 +3,10 @@
 from model.contact import Contact
 from random import randrange
 
-def test_edit_random_contact(app):
-    if app.contact.count() == 0:
+def test_edit_random_contact(app, db, check_ui):
+    if len(db.get_contact_list()) == 0:
         app.contact.create(Contact(firstname="Nikto"))
-    oldcontacts = app.contact.get_contact_list()
+    oldcontacts = db.get_contact_list()
     index = randrange(len(oldcontacts))
     contact = Contact(firstname="Edit", middlename="Editovich", lastname="Editov", nickname="EditedNick", title="edited title", company="edited company", address="edited address",
                                home_phone="edited home phone", mobile_phone="edited mobile phone", work_phone="edited work phone", fax="edited fax", main_email="edited main email", email_2="edited email 2",
@@ -15,9 +15,12 @@ def test_edit_random_contact(app):
     contact.id = oldcontacts[index].id
     app.contact.edit_by_index(contact, index)
         # check, that after editing contact count of contactss not changed
-    assert len(oldcontacts) == app.contact.count()
+    assert len(oldcontacts) == len(db.get_contact_list())
         # check, that list of contacts after editing contact is the same, as list of contacts before editing with first contact replaced
-    newcontacts = app.contact.get_contact_list()
+    newcontacts = db.get_contact_list()
     oldcontacts[index] = contact
     assert sorted(oldcontacts, key=Contact.id_or_max) == sorted(newcontacts, key=Contact.id_or_max)
+    if check_ui:
+        assert sorted(db.get_stripped_contact_list(), key=Contact.id_or_max) == \
+               sorted(app.contact.get_contact_list(), key=Contact.id_or_max)
 

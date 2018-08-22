@@ -11,7 +11,7 @@ try:
 except getopt.GetoptError as err:
     getopt.usage()
     sys.exit(2)
-n = 4
+n = 2
 f = "/data/groups.json"
 
 safechars = string.ascii_letters + string.digits + "~ -_." + "/"
@@ -35,7 +35,7 @@ def random_string(prefix, maxlength):
 
 testdata = [Group(group_name="", group_header="", group_footer="")] + \
            [Group(group_name=random_string("name", 5), group_header=random_string("header", 5),
-                  group_footer=random_string("footer", 5)) for i in range(n)]
+                  group_footer=random_string("footer", 5)) for i in range(n-1)]
 
 file = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..%s" %f)
 with open(file, "w") as fi:

@@ -62,6 +62,13 @@ class ContactHelper:
         self.app.open_home_page()
         self.contact_cache = None
 
+    def delete_by_id(self, id):
+        self.app.open_home_page()
+        self.select_by_id(id)
+        self.submit_contact_deletion()
+        self.app.open_home_page()
+        self.contact_cache = None
+
     def delete_all(self):
         wd = self.app.wd
         self.app.open_home_page()
@@ -156,6 +163,10 @@ class ContactHelper:
         if contactcount <= index:
             sys.exit("Index value is %d bigger than number of contacts %d" % (index, contactcount))
         wd.find_elements_by_name("selected[]")[index].click()
+
+    def select_by_id(self, id):
+        wd = self.app.wd
+        wd.find_element_by_css_selector("input[value='%s']" % id).click()
 
     def count(self):
         wd = self.app.wd
