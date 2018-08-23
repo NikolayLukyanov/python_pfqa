@@ -1,6 +1,7 @@
 
 from fixture.application import Application
 from fixture.db import DbFixture
+from fixture.orm import ORMFixture
 import pytest
 import json
 import jsonpickle
@@ -37,6 +38,11 @@ def db(request):
     request.addfinalizer(fin)
     return dbfixture
 
+@pytest.fixture(scope="session")
+def dbOrm(request):
+    dbconfig = load_config(request.config.getoption("--target"))['db']
+    dbOrmfixture = ORMFixture(host=dbconfig["host"], name=dbconfig["name"], user=dbconfig["user"], password=dbconfig["password"])
+    return dbOrmfixture
 
 @pytest.fixture(scope="session", autouse=True )
 def stop(request):

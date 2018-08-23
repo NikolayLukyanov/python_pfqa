@@ -1,6 +1,7 @@
 from model.group import Group
 import sys
 
+
 class GroupHelper:
     def __init__(self, app):
         self.app = app
@@ -41,6 +42,7 @@ class GroupHelper:
         if wd.current_url.endswith("group.php") and len(wd.find_elements_by_name("new")) > 0:
             return
         wd.find_element_by_link_text("groups").click()
+
 
     def delete_first(self, index):
         self.delete_by_index(0)
@@ -126,4 +128,12 @@ class GroupHelper:
                 id = element.find_element_by_name("selected[]").get_attribute("value")
                 self.group_cache.append(Group(group_name=text, id=id))
         return list(self.group_cache)
+
+    def remove_contact_by_id_from_group(self, group, contact_id):
+        wd = self.app.wd
+        self.app.open_group_page_by_id(group.id)    #open group page with assigned contacts
+        wd.find_element_by_css_selector("input[value='%s']" % contact_id).click()    #select contact by id
+        wd.find_element_by_name("remove").click()
+
+
 

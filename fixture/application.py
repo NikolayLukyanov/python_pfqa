@@ -26,6 +26,9 @@ class Application:
             return
         wd.get(self.baseUrl)
 
+    def open_group_page_by_id(self, id):
+        wd = self.wd
+        wd.get(self.baseUrl+'/?group=%s' %id)
 
     def destroy(self):
         self.wd.quit()

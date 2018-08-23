@@ -1,6 +1,7 @@
 from model.contact import Contact
 import sys
 import re
+from selenium.webdriver.support.ui import Select
 
 class ContactHelper:
     def __init__(self, app):
@@ -234,3 +235,13 @@ class ContactHelper:
         return "\n".join(filter(lambda x: x != "",
                                 filter(lambda x: x is not None,
                                       [contact.main_email, contact.email_2, contact.email_3])))
+
+    def assign_group_by_id_to_contact(self, contact, group_id):
+        wd = self.app.wd
+        self.app.open_home_page()
+        self.select_by_id(contact.id)
+        select = Select(wd.find_element_by_name("to_group"))
+        select.select_by_value(group_id)
+        wd.find_element_by_name("add").click()
+
+
