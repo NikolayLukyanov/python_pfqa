@@ -60,5 +60,19 @@ class DbFixture:
 
         return result
 
+    def get_stripped_mainpage_contact_list(self):
+        connect = self.connection.cursor()
+        result = []
+        with connect as cursor:  # connection.__enter__ executes at this line
+            cursor.execute("select id, lastname, firstname, address, home, mobile, work, phone2, email, email2, email3 "
+                           "from addressbook where deprecated='0000-00-00 00:00:00'")
+            self.connection.commit()
+            for row in cursor.fetchall():
+                (id, lastname, firstname, address, home, mobile, work, phone2, email, email2, email3) = row
+                result.append(Contact(id=str(id), firstname=firstname.strip(), lastname=lastname.strip(), address=address.strip(),
+                                      main_email=email.strip(), email_2=email2.strip(), email_3=email3.strip(),
+                                      home_phone=home.strip(), mobile_phone=mobile.strip(), work_phone=work.strip(), phone2=phone2.strip()))
+        return result
+
     def destroy(self):
         self.connection.close()
